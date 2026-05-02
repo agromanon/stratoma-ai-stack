@@ -177,8 +177,6 @@ services:
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       PAPERCLIP_API_KEY: ${PAPERCLIP_ADMIN_API_KEY:-}
-    volumes:
-      - openclaw-data:/root/.openclaw
 
 volumes:
   paperclip-db-data:
@@ -186,7 +184,6 @@ volumes:
   n8n-db-data:
   n8n-data:
   supabase-db-data:
-  openclaw-data:
 
 networks:
   default:
