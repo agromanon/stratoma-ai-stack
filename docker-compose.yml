@@ -112,7 +112,7 @@ services:
     depends_on:
       - supabase-db
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
