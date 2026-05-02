@@ -33,6 +33,8 @@ services:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       NODE_ENV: production
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      PAPERCLIP_AGENT_JWT_SECRET: ${PAPERCLIP_AGENT_JWT_SECRET}
     volumes:
       - paperclip-data:/paperclip
       - ./paperclip/stratoma-default:/paperclip/stratoma-default:ro
@@ -106,7 +108,9 @@ services:
       retries: 5
 
   supabase-kong:
-    image: kong:2.8.1
+    build:
+      context: ./supabase
+      dockerfile: Dockerfile
     container_name: supabase-kong
     restart: unless-stopped
     depends_on:
@@ -120,8 +124,6 @@ services:
       KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
       SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
-    volumes:
-      - ./supabase/kong.yml:/var/lib/kong/kong.yml:ro
 
   supabase-auth:
     image: supabase/gotrue:v2.164.0
@@ -162,19 +164,20 @@ services:
 
   # ─── OpenClaw Bot Gateway ───────────────────────────────────────────────────
   openclaw:
-    image: node:22-alpine
+    build:
+      context: ./openclaw
+      dockerfile: Dockerfile
     container_name: openclaw
     restart: unless-stopped
-    working_dir: /app
-    command: sh -c "npm install -g openclaw && openclaw gateway start"
     ports:
       - "18789:18789"
     environment:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      PAPERCLIP_API_KEY: ${PAPERCLIP_ADMIN_API_KEY:-}
     volumes:
       - openclaw-data:/root/.openclaw
-      - ./openclaw/openclaw.json:/root/.openclaw/openclaw.json:ro
 
 volumes:
   paperclip-db-data:
