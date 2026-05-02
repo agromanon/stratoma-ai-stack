@@ -1,22 +1,19 @@
 #!/bin/sh
 mkdir -p /root/.openclaw
-cat > /root/.openclaw/openclaw.json << ENDOFFILE
+cat > /root/.openclaw/openclaw.json << 'ENDOFFILE'
 {
-  "gateway": {"port": 18789, "host": "0.0.0.0"},
+  "gateway": {"port": 18789},
   "accounts": {
     "main": {
       "type": "telegram",
-      "token": "${TELEGRAM_BOT_TOKEN}",
+      "token": "PLACEHOLDER_TOKEN",
       "name": "Main Bot"
     }
   },
   "channels": {
     "whatsapp": {"dmPolicy": "pairing", "groupPolicy": "deny", "allowFrom": []}
-  },
-  "paperclip": {
-    "url": "http://paperclip:3100",
-    "apiKey": "${PAPERCLIP_API_KEY}"
   }
 }
 ENDOFFILE
+sed -i "s/PLACEHOLDER_TOKEN/$TELEGRAM_BOT_TOKEN/g" /root/.openclaw/openclaw.json
 openclaw gateway start

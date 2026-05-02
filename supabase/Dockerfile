@@ -1,5 +1,4 @@
-FROM kong:2.8.1
+FROM supabase/postgres:15.8.1.060
 
-COPY kong.yml /var/lib/kong/kong.yml
-
-CMD ["kong", "docker-start"]
+COPY db/init.sh /docker-entrypoint-initdb.d/99-init-supabase-roles.sh
+RUN chmod +x /docker-entrypoint-initdb.d/99-init-supabase-roles.sh
