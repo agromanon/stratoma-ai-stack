@@ -35,6 +35,7 @@ services:
       NODE_ENV: production
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       PAPERCLIP_AGENT_JWT_SECRET: ${PAPERCLIP_AGENT_JWT_SECRET}
+      BETTER_AUTH_BASE_URL: ${PAPERCLIP_URL:-http://paperclip:3100}
     volumes:
       - paperclip-data:/paperclip
       - ./paperclip/stratoma-default:/paperclip/stratoma-default:ro
