@@ -38,6 +38,34 @@ ALTER ROLE supabase_auth_admin SET search_path TO auth, public;
 GRANT USAGE ON SCHEMA auth TO supabase_auth_admin;
 GRANT USAGE ON SCHEMA auth TO authenticator;
 GRANT ALL PRIVILEGES ON SCHEMA auth TO supabase_auth_admin;
+
+-- Create GoTrue schema tables
+CREATE TABLE IF NOT EXISTS auth.schema_migrations (
+  version varchar(255) PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS auth.structurestorage (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at timestamptz DEFAULT now(),
+  name varchar(255) NOT NULL,
+  structure jsonb NOT NULL DEFAULT '{}'
+);
+
+CREATE TABLE IF NOT EXISTS auth.migrations (
+  id SERIAL PRIMARY KEY,
+  name varchar(255) NOT NULL UNIQUE,
+  executed_at timestamptz DEFAULT now()
+);
+
+-- Grant table permissions
+GRANT ALL PRIVILEGES ON auth.schema_migrations TO supabase_auth_admin, authenticator;
+GRANT ALL PRIVILEGES ON auth.structurestorage TO supabase_auth_admin, authenticator;
+GRANT ALL PRIVILEGES ON auth.migrations TO supabase_auth_admin, authenticator;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA auth TO supabase_auth_admin, authenticator;
+
+-- Mark as migrated
+INSERT INTO auth.schema_migrations (version) VALUES ('20231212100000') ON CONFLICT (version) DO NOTHING;
+INSERT INTO auth.migrations (name) VALUES ('init_schema') ON CONFLICT (name) DO NOTHING;
 EOF
 
 echo "Supabase initialization complete"
