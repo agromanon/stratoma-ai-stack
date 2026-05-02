@@ -6,8 +6,9 @@ until psql -U postgres -c '\q' 2>/dev/null; do
   sleep 1
 done
 
-echo "Creating Supabase schemas and roles..."
-psql -U postgres << 'EOF'
+echo "DEBUG: postgres is ready, running init script..."
+psql -U postgres -v ON_ERROR_STOP=1 << 'EOF'
+\echo 'DEBUG: Starting Supabase init script'
 -- Create auth schema
 CREATE SCHEMA IF NOT EXISTS auth;
 
@@ -38,6 +39,19 @@ ALTER ROLE supabase_auth_admin SET search_path TO auth, public;
 GRANT USAGE ON SCHEMA auth TO supabase_auth_admin;
 GRANT USAGE ON SCHEMA auth TO authenticator;
 GRANT ALL PRIVILEGES ON SCHEMA auth TO supabase_auth_admin;
+
+-- Verify roles exist before continuing
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'supabase_auth_admin') THEN
+    RAISE EXCEPTION 'supabase_auth_admin role was NOT created';
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticator') THEN
+    RAISE EXCEPTION 'authenticator role was NOT created';
+  END IF;
+  RAISE NOTICE 'Roles verified: supabase_auth_admin, authenticator';
+END
+$$;
 
 -- Create GoTrue schema tables
 CREATE TABLE IF NOT EXISTS auth.schema_migrations (
