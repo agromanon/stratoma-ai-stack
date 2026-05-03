@@ -1,14 +1,16 @@
 #!/bin/bash
 set -e
 
-echo "Waiting for PostgreSQL to be ready..."
+echo "DEBUG: Waiting for PostgreSQL to be ready..."
 until psql -U postgres -c '\q' 2>/dev/null; do
   sleep 1
 done
 
 echo "DEBUG: postgres is ready, running init script..."
-psql -U postgres -v ON_ERROR_STOP=1 << 'EOF'
-\echo 'DEBUG: Starting Supabase init script'
+psql -U postgres --set ON_ERROR_STOP=1 <<'EOF'
+-- DEBUG: Starting Supabase init script
+SELECT 'DEBUG: Starting Supabase init script' as init_status;
+
 -- Create auth schema
 CREATE SCHEMA IF NOT EXISTS auth;
 
@@ -17,9 +19,15 @@ DO $$
 BEGIN
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'supabase_auth_admin') THEN
     CREATE ROLE supabase_auth_admin WITH LOGIN PASSWORD 'Afmg248635!';
+    RAISE NOTICE 'Created role supabase_auth_admin';
+  ELSE
+    RAISE NOTICE 'Role supabase_auth_admin already exists';
   END IF;
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticator') THEN
     CREATE ROLE authenticator WITH LOGIN;
+    RAISE NOTICE 'Created role authenticator';
+  ELSE
+    RAISE NOTICE 'Role authenticator already exists';
   END IF;
 END
 $$;
@@ -80,6 +88,8 @@ GRANT USAGE ON ALL SEQUENCES IN SCHEMA auth TO supabase_auth_admin, authenticato
 -- Mark as migrated
 INSERT INTO auth.schema_migrations (version) VALUES ('20231212100000') ON CONFLICT (version) DO NOTHING;
 INSERT INTO auth.migrations (name) VALUES ('init_schema') ON CONFLICT (name) DO NOTHING;
+
+SELECT 'DEBUG: Supabase init script completed successfully' as init_status;
 EOF
 
 echo "Supabase initialization complete"
