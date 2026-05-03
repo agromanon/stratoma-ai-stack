@@ -125,6 +125,8 @@ services:
       KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
       SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+    volumes:
+      - ./supabase/kong.yml:/var/lib/kong/kong.yml:ro
 
   supabase-auth:
     image: supabase/gotrue:v2.164.0
