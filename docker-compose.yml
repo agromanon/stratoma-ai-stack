@@ -189,6 +189,3 @@ volumes:
   n8n-data:
   supabase-db-data:
 
-networks:
-  default:
-    name: stratoma-network
