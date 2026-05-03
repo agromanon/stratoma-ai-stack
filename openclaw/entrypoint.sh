@@ -7,4 +7,4 @@ cat > /root/.openclaw/openclaw.json << 'ENDOFFILE'
   }
 }
 ENDOFFILE
-openclaw gateway start
+openclaw gateway
