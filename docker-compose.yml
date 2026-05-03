@@ -91,7 +91,9 @@ services:
 
   # ─── Supabase Self-Hosted ───────────────────────────────────────────────────
   supabase-db:
-    image: supabase/postgres:15.8.1.060
+    build:
+      context: ./supabase
+      dockerfile: Dockerfile
     container_name: supabase-db
     restart: unless-stopped
     environment:
