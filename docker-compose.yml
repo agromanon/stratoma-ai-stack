@@ -111,7 +111,9 @@ services:
       retries: 5
 
   supabase-kong:
-    image: kong:3.4
+    build:
+      context: ./supabase
+      dockerfile: kong.Dockerfile
     container_name: supabase-kong
     restart: unless-stopped
     depends_on:
@@ -125,8 +127,6 @@ services:
       KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
       SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
-    volumes:
-      - ./supabase/kong.yml:/var/lib/kong/kong.yml:ro
 
   supabase-auth:
     image: supabase/gotrue:v2.164.0
