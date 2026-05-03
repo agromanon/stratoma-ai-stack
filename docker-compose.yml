@@ -31,6 +31,8 @@ services:
       DATABASE_URL: postgres://paperclip:${PAPERCLIP_DB_PASSWORD:-paperclip}@paperclip-db:5432/paperclip
       PAPERCLIP_LISTEN_PORT: "3100"
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      ANTHROPIC_BASE_URL: "https://api.minimax.io/anthropic"
+      ANTHROPIC_MODEL: "MiniMax-M2.7"
       NODE_ENV: production
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       PAPERCLIP_AGENT_JWT_SECRET: ${PAPERCLIP_AGENT_JWT_SECRET}
