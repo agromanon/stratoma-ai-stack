@@ -101,7 +101,7 @@ services:
       JWT_SECRET: ${SUPABASE_JWT_SECRET}
       JWT_EXP: 3600
     volumes:
-      - supabase-db-data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
       - type: bind
         source: ./supabase/db/init.sh
         target: /docker-entrypoint-initdb.d/99-init-supabase-roles.sh
