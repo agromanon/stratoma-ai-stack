@@ -30,7 +30,6 @@ services:
     environment:
       DATABASE_URL: postgres://paperclip:${PAPERCLIP_DB_PASSWORD:-paperclip}@paperclip-db:5432/paperclip
       PAPERCLIP_LISTEN_PORT: "3100"
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       NODE_ENV: production
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
