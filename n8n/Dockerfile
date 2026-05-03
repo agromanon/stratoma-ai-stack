@@ -1,4 +1,9 @@
-FROM n8nio/n8n:1.71.2
-USER root
-RUN apt-get update && apt-get install -y python3 python3-pip && pip3 install --break-system-packages virtualenv && apt-get clean
-USER node
+FROM python:3.12-slim-bookworm AS python
+RUN pip install --break-system-packages virtualenv
+
+FROM n8nio/n8n:latest
+COPY --from=python /usr/local/bin/python3 /usr/local/bin/python3
+COPY --from=python /usr/local/bin/pip* /usr/local/bin/
+COPY --from=python /usr/local/lib/python3.12 /usr/local/lib/python3.12
+COPY --from=python /usr/local/include/python3.12 /usr/local/include/python3.12
+ENV PATH="/usr/local/bin:$PATH"
