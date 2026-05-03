@@ -1,11 +1,22 @@
-FROM python:3.12-slim-bookworm AS python
-RUN pip install --break-system-packages virtualenv
+FROM node:22-slim-bookworm
 
-FROM n8nio/n8n:latest
-COPY --from=python /usr/local/bin/python3 /usr/local/bin/python3
-COPY --from=python /usr/local/bin/pip* /usr/local/bin/
-COPY --from=python /usr/local/lib/python3.12 /usr/local/lib/python3.12
-COPY --from=python /usr/local/include/python3.12 /usr/local/include/python3.12
-COPY --from=python /usr/local/lib/libpython3.12.so.1.0 /usr/local/lib/libpython3.12.so.1.0
-RUN ldconfig /usr/local/lib 2>/dev/null || true
-ENV PATH="/usr/local/bin:$PATH"
+ENV N8N_VERSION=1.71.2
+ENV NODE_ENV=production
+
+RUN apt-get update && apt-get install -y python3 python3-pip python3-venv postgresql-client \
+    && pip3 install --break-system-packages virtualenv \
+    && npm install -g n8n@${N8N_VERSION} \
+    && apt-get clean \
+    && npm cache clean --force \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+WORKDIR /home/node
+USER node
+
+ENV DB_TYPE=postgresdb
+ENV GENERIC_TIMEZONE=Europe/Madrid
+ENV NODE_ENV=production
+
+EXPOSE 5678
+
+CMD ["n8n"]
