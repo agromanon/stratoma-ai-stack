@@ -85,6 +85,16 @@ GRANT ALL PRIVILEGES ON auth.structurestorage TO supabase_auth_admin, authentica
 GRANT ALL PRIVILEGES ON auth.migrations TO supabase_auth_admin, authenticator;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA auth TO supabase_auth_admin, authenticator;
 
+-- Change ownership so GoTrue (supabase_auth_admin) can run migrations
+ALTER TABLE auth.schema_migrations OWNER TO supabase_auth_admin;
+ALTER TABLE auth.structurestorage OWNER TO supabase_auth_admin;
+ALTER TABLE auth.migrations OWNER TO supabase_auth_admin;
+ALTER SCHEMA auth OWNER TO supabase_auth_admin;
+
+-- Set password for authenticator so PostgREST can connect
+-- Password must match SUPABASE_DB_PASSWORD env var
+ALTER ROLE authenticator WITH LOGIN PASSWORD 'Afmg248635!';
+
 -- Mark as migrated
 INSERT INTO auth.schema_migrations (version) VALUES ('20231212100000') ON CONFLICT (version) DO NOTHING;
 INSERT INTO auth.migrations (name) VALUES ('init_schema') ON CONFLICT (name) DO NOTHING;
