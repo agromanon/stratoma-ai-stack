@@ -1,4 +1,4 @@
-FROM node:22-slim-bookworm
+FROM node:22-bookworm
 
 ENV N8N_VERSION=1.71.2
 ENV NODE_ENV=production
