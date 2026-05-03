@@ -115,6 +115,8 @@ GRANT ALL PRIVILEGES ON SCHEMA auth TO anon;
 GRANT ALL PRIVILEGES ON SCHEMA auth TO authenticated;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO anon;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+GRANT anon TO authenticator;
+GRANT authenticated TO authenticator;
 
 -- Mark as migrated
 INSERT INTO auth.schema_migrations (version) VALUES ('20231212100000') ON CONFLICT (version) DO NOTHING;
