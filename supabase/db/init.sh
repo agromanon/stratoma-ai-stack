@@ -95,6 +95,27 @@ ALTER SCHEMA auth OWNER TO supabase_auth_admin;
 -- Password must match SUPABASE_DB_PASSWORD env var
 ALTER ROLE authenticator WITH LOGIN PASSWORD 'Afmg248635!';
 
+-- Create anon and authenticated roles for PostgREST
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'anon') THEN
+    CREATE ROLE anon WITH NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticated') THEN
+    CREATE ROLE authenticated WITH NOLOGIN;
+  END IF;
+END
+$$;
+
+GRANT USAGE ON SCHEMA public TO anon;
+GRANT USAGE ON SCHEMA public TO authenticated;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT ALL PRIVILEGES ON SCHEMA auth TO anon;
+GRANT ALL PRIVILEGES ON SCHEMA auth TO authenticated;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO anon;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+
 -- Mark as migrated
 INSERT INTO auth.schema_migrations (version) VALUES ('20231212100000') ON CONFLICT (version) DO NOTHING;
 INSERT INTO auth.migrations (name) VALUES ('init_schema') ON CONFLICT (name) DO NOTHING;
