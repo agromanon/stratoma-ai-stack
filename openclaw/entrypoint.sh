@@ -5,7 +5,7 @@ cat > /root/.openclaw/openclaw.json << 'ENDOFFILE'
   "gateway": {
     "port": 18789,
     "mode": "local",
-    "bind": "all"
+    "bind": "lan"
   }
 }
 ENDOFFILE
