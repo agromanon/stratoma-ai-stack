@@ -1,14 +1,14 @@
 #!/bin/sh
 mkdir -p /root/.openclaw
-cat > /root/.openclaw/openclaw.json << 'ENDOFFILE'
+cat > /root/.openclaw/openclaw.json << 'CONFIG'
 {
   "gateway": {
     "port": 18789,
     "mode": "local",
     "bind": "lan",
     "auth": {
-      "mode": "trusted-proxy",
-      "trustedProxy": true
+      "mode": "token",
+      "token": "b3598faeffb39818988f28d1ee33307f145905da4cd2b810"
     },
     "controlUi": {
       "allowedOrigins": [
@@ -86,5 +86,5 @@ cat > /root/.openclaw/openclaw.json << 'ENDOFFILE'
     }
   }
 }
-ENDOFFILE
+CONFIG
 openclaw gateway --allow-unconfigured
