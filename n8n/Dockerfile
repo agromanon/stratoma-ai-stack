@@ -1,6 +1,6 @@
 FROM node:22-bookworm
 
-ENV N8N_VERSION=1.71.2
+ENV N8N_VERSION=1.121.0
 ENV NODE_ENV=production
 
 RUN apt-get update && apt-get install -y python3 python3-pip python3-venv postgresql-client \
