@@ -7,8 +7,7 @@ cat > /root/.openclaw/openclaw.json << 'ENDOFFILE'
     "mode": "local",
     "bind": "lan",
     "auth": {
-      "mode": "token",
-      "token": "b3598faeffb39818988f28d1ee33307f145905da4cd2b810"
+      "mode": "trusted-proxy"
     },
     "controlUi": {
       "allowedOrigins": [
